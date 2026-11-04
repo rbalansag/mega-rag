@@ -1,0 +1,31 @@
+{
+  "name": "@rbalansag/cli",
+  "version": "1.0.0",
+  "description": "Interactive scaffolding CLI that installs and syncs Mega RAG AI guardrails.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "mega-rag": "./bin/mega-rag.js"
+  },
+  "files": [
+    "bin",
+    "src"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.10.0",
+    "@rbalansag/rules": "^1.0.0",
+    "execa": "^9.5.1",
+    "fs-extra": "^11.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rbalansag/mega-rag.git",
+    "directory": "packages/cli"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}

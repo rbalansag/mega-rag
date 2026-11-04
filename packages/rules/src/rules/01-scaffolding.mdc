@@ -1,0 +1,26 @@
+---
+description: Core architectural layer boundaries. Apply when creating, moving, or importing between source files.
+globs: **/*.ts,**/*.tsx,**/*.js,**/*.jsx,**/*.vue,**/*.py,**/*.go,**/*.rs,**/*.dart,**/*.swift,**/*.kt,**/*.cs,**/*.gd
+alwaysApply: false
+---
+
+# Scaffolding & Layer Boundaries
+
+Dependencies point inward: `presentation -> application -> domain <- infrastructure`.
+
+## Hard rules
+- UI / presentation code MUST NOT import database clients, ORMs, queue clients, or raw HTTP clients. It calls application services or use cases.
+- Domain code (entities, value objects, domain services) MUST NOT import frameworks, I/O, or infrastructure. It is pure and unit-testable.
+- Infrastructure (repositories, API clients, adapters) implements interfaces defined by the application/domain layer; it is never imported by presentation.
+- Route handlers, controllers, and screens stay thin: parse input, call one service, map the result. No business logic.
+- No circular imports. If two modules need each other, extract the shared piece into `shared/` or invert the dependency behind an interface.
+- Features / modules do not reach into each other's internals; they use the public entry point (index file, package API, or interface).
+
+## Placement
+- Follow the folder architecture documented in `AGENTS.md`. Do not invent new top-level folders; ask first.
+- One responsibility per file. Prefer small, named modules over `utils` or `helpers` dumping grounds.
+- Shared code goes in `shared/` only after a second real use.
+
+## Before finishing a change
+- Check each new import against the direction above.
+- Add or update tests next to the layer you changed (domain: unit; infrastructure: integration).

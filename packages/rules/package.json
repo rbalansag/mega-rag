@@ -1,0 +1,38 @@
+{
+  "name": "@rbalansag/rules",
+  "version": "1.0.0",
+  "description": "MDC guardrail rules, AGENTS.md / llms.txt templates, and domain overlays for Mega RAG.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./rules/*": "./dist/rules/*",
+    "./domains/*": "./dist/domains/*",
+    "./templates/*": "./dist/templates/*",
+    "./manifest.json": "./dist/manifest.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "node scripts/compile-rules.js"
+  },
+  "devDependencies": {
+    "fs-extra": "^11.2.0",
+    "glob": "^10.4.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rbalansag/mega-rag.git",
+    "directory": "packages/rules"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}

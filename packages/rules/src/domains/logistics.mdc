@@ -1,0 +1,20 @@
+---
+description: Logistics / ride-hailing overlay with Uber H3 geospatial indexing, dispatch, and location tracking.
+globs: **/domain/**,**/modules/**,**/features/**,**/services/**,**/geo/**
+alwaysApply: false
+---
+
+# Logistics / H3 Overlay
+
+## Geospatial
+- Use Uber H3 for spatial indexing. Store the H3 cell as a 15-char hex string (or uint64) plus the resolution used.
+- Choose resolution by use case: res 7-8 for city/surge zones, res 9-10 for driver matching, res 11+ for pickup precision. Define these as named constants.
+- Coordinate order is `(lat, lng)` for H3 calls and `(lng, lat)` for GeoJSON. Convert in one adapter and name variables `lat`/`lng`, never `x`/`y`.
+- Find nearby entities with `gridDisk` (k-ring) on the origin cell, then rank by true great-circle distance. Never use planar distance for ranking.
+- Geofences are cell sets (`polygonToCells`) cached per zone, not recomputed per request.
+
+## Dispatch & tracking
+- Driver/vehicle location pings are throttled client-side (e.g. 3-5 s moving, 30 s idle) and written to a hot store (Redis) keyed by cell.
+- Dispatch is idempotent: an offer has an ID, TTL, and explicit states (`offered`, `accepted`, `expired`, `canceled`).
+- A job/trip is a state machine; every transition records actor, time, and location.
+- ETAs come from a routing service behind an interface; cache by `(origin cell, destination cell, time bucket)`.

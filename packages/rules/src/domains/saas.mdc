@@ -1,0 +1,16 @@
+---
+description: B2B SaaS overlay: multi-tenancy, RBAC, billing, audit logging.
+globs: **/domain/**,**/modules/**,**/features/**,**/services/**,**/api/**
+alwaysApply: false
+---
+
+# B2B SaaS Overlay
+
+- Every tenant-owned row carries `tenantId`; every query is scoped by it. Enforce in a repository base or database row-level security, never ad hoc in handlers.
+- Resolve tenant from the authenticated session, never from a client-supplied header or body field.
+- RBAC: roles map to permissions; code checks permissions (`can("invoice:write")`), not role names.
+- Plan entitlements and feature flags are checked in the application layer through one `entitlements` service.
+- Subscription lifecycle (trialing, active, past_due, canceled) is an explicit state machine driven by provider webhooks.
+- Webhook handlers verify signatures, are idempotent (store processed event IDs), and respond quickly.
+- Write an append-only audit log entry (`actorId`, `tenantId`, action, target, timestamp) for every security-relevant or admin action.
+- Provide tenant-level export and deletion paths; avoid cross-tenant joins in analytics code.

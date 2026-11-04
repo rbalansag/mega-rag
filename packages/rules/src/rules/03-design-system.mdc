@@ -1,0 +1,28 @@
+---
+description: Design tokens, WCAG AA accessibility, and component rules. Apply when writing or editing UI.
+globs: **/*.tsx,**/*.jsx,**/*.vue,**/*.css,**/*.scss,**/*.dart,**/*.swift,**/*.kt,**/*.cs
+alwaysApply: false
+---
+
+# Design System & Accessibility
+
+## Tokens
+- Use only design tokens (color, spacing, radius, typography, elevation, motion) from the project's token source. No raw hex values, magic pixel numbers, or ad-hoc font sizes in components.
+- If a needed token does not exist, add it to the token source first, then use it.
+- Prefer semantic tokens (`color.text.primary`, `space.4`) over raw palette values.
+- Support light and dark themes through tokens, not per-component overrides.
+
+## WCAG 2.2 AA (minimums)
+- Text contrast >= 4.5:1 (>= 3:1 for large text and for UI component boundaries/icons).
+- Every interactive element is keyboard reachable, has a visible focus indicator, and a logical focus order.
+- Touch/click targets >= 44x44 pt (iOS/web) or 48x48 dp (Android).
+- Inputs have programmatic labels; errors are announced and not conveyed by color alone.
+- Images have alt text (or are marked decorative); icons-only buttons have accessible names.
+- Respect reduced-motion and text-scaling settings. No layout that breaks at 200% zoom.
+- Use semantic elements/roles (`button`, `nav`, `main`, headings in order) before reaching for ARIA.
+
+## Components
+- Small, composable, single-purpose. Variants and sizes are props mapped to tokens, not copy-pasted styles.
+- Every component handles loading, empty, error, and disabled states.
+- Presentational components do not fetch data or know about the backend.
+- Reuse existing components from the design system before creating new ones.

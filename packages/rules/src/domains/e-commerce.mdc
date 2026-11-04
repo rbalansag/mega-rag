@@ -1,0 +1,16 @@
+---
+description: E-commerce overlay: catalog, cart, orders, payments, inventory.
+globs: **/domain/**,**/modules/**,**/features/**,**/services/**,**/api/**
+alwaysApply: false
+---
+
+# E-Commerce Overlay
+
+- Prices are integer minor units with a currency code. Taxes, discounts, and shipping are separate line items computed server-side.
+- Snapshot price, tax, and product title onto the order line at purchase time; never recompute historical orders from the live catalog.
+- Orders follow an explicit state machine: `pending -> paid -> fulfilled -> delivered`, with `canceled` and `refunded` branches.
+- Reserve inventory with an expiring reservation at checkout; commit on payment success and release on timeout or cancel.
+- Payment calls use idempotency keys. Confirm payment from the provider webhook, not from the client redirect.
+- Never handle raw card data. Use hosted fields or provider tokens to stay out of PCI scope.
+- Cart totals shown in the client are advisory; the server recalculates and validates on checkout.
+- Emit telemetry for `cart.item_added`, `checkout.started`, `checkout.completed`, `order.refunded`.

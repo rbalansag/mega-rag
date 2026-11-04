@@ -1,0 +1,27 @@
+# AGENTS.md — {{name}}
+
+Blueprint for AI coding agents (Cursor, Claude, Aider, etc.). Read this before changing code.
+
+## Project
+- **Platform:** {{platform}}
+- **Stack:** {{stack}}
+- **Language:** {{lang}}
+- **Architecture:** {{architecture}}
+- **Design system:** {{design}}
+- **Domain overlay:** {{domain}}
+
+## Directory layout
+{{layout}}
+
+## Guardrails
+Machine rules live in `.cursor/rules/` and are managed by `@rbalansag/cli`:
+
+{{rules}}
+
+Add your own rules as new `.mdc` files in the same folder. They are never overwritten.
+Run `npx @rbalansag/cli sync` to refresh managed rules and `npx @rbalansag/cli check` to detect drift.
+
+## Conventions
+- Environment variables are validated at boot in `{{envPath}}`. Read config only from there.
+- Respect layer boundaries (see `01-scaffolding.mdc`). Ask before adding top-level folders.
+- Telemetry events use `(actorId, eventName, properties, userTraits)` (see `05-telemetry.mdc`).

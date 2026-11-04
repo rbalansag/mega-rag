@@ -1,0 +1,17 @@
+---
+description: Game development overlay: game loop, determinism, server authority, performance budgets.
+globs: **/domain/**,**/modules/**,**/features/**,**/systems/**,**/scripts/**,**/Scripts/**
+alwaysApply: false
+---
+
+# Gaming Overlay
+
+- Separate simulation from rendering. Simulation runs on a fixed timestep; rendering interpolates.
+- Multiplayer: the server is authoritative. Clients send inputs, not state. Validate every input (rate, range, cooldown).
+- Keep simulation deterministic where replays or rollback are needed: seeded RNG, no wall-clock reads, stable iteration order.
+- No allocations in per-frame hot paths. Pool frequently spawned objects (projectiles, particles, UI items).
+- Define frame, memory, and asset budgets up front (e.g. 16.6 ms/frame at 60 fps) and keep them in config, not in code comments.
+- Data-driven content: stats, levels, and balance live in versioned data files, not hardcoded.
+- Save data is versioned with explicit migrations. Never break old saves silently.
+- Input goes through an action-mapping layer (rebindable, gamepad/touch/keyboard), never raw device checks in gameplay code.
+- Telemetry: batch events and persist offline (see telemetry rule); never emit per-frame events.

@@ -1,0 +1,28 @@
+---
+description: Structured telemetry event schema and offline queuing. Apply when adding or editing tracking/analytics code.
+globs: **/telemetry/**,**/analytics/**,**/tracking/**,**/events/**
+alwaysApply: false
+---
+
+# Telemetry
+
+## Event schema
+Every event is the tuple `(actorId, eventName, properties, userTraits)`:
+- `actorId`: stable pseudonymous ID of the user/device/service (never an email or phone number).
+- `eventName`: `snake_case`, optionally dot-namespaced, in `object.past_tense_action` form, e.g. `checkout.completed`.
+- `properties`: flat-ish JSON describing this event only. Versioned by `schemaVersion`.
+- `userTraits`: slow-changing attributes of the actor (plan, locale, platform, app version).
+
+Build events with `trackTelemetryEvent` from `@rbalansag/sdk` so they are validated and stamped with `eventId`, `timestamp`, and `schemaVersion`.
+
+## Rules
+- No PII or secrets in `properties` or `userTraits`. Hash or omit.
+- Do not add a new event name without documenting it next to the existing event catalog.
+- Tracking calls must never throw or block UI/game loops; swallow and log failures.
+- Prefer events at the application layer (use case completed), not scattered through UI components.
+
+## Offline & batching (mobile / game clients)
+- Enqueue events locally first, then flush in batches (e.g. every 30 s, at 20 events, and on app background).
+- Persist the queue (bounded size, drop-oldest) so events survive restarts and offline periods.
+- Retry with exponential backoff and jitter. Use `eventId` for server-side de-duplication.
+- Respect user consent and platform privacy settings before enqueuing.

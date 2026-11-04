@@ -1,0 +1,34 @@
+---
+description: Secrets, environment validation, CORS, and OWASP security headers. Always applies.
+globs: **/*
+alwaysApply: true
+---
+
+# Security & Environment
+
+## Secrets & environment
+- Never hardcode secrets, tokens, keys, or connection strings. Never commit `.env` files; keep `.env.example` current.
+- All configuration is read in ONE env module and validated at boot (Zod via `@rbalansag/sdk` `createEnvValidator`, pydantic-settings, or the stack equivalent). The process must fail fast with a human-readable list of missing or invalid variables.
+- Do not read `process.env` / `os.Getenv` / `Platform.environment` anywhere except the env module. Import the typed config instead.
+- Only variables with the framework's public prefix (`NEXT_PUBLIC_`, `EXPO_PUBLIC_`, `VITE_`) may reach client bundles. Anything else is server-only.
+- Never log secrets, tokens, passwords, or full request bodies. Redact by key name.
+
+## Input & data access
+- Validate every external input at the boundary (request bodies, query params, deep links, webhooks, file uploads) with a schema.
+- Use parameterized queries only. No string-built SQL.
+- Authorization is enforced server-side on every request; never trust client-supplied roles or IDs.
+
+## CORS
+- Use an explicit origin allowlist from config. Never use `*` together with credentials.
+
+## OWASP security headers (web/API responses)
+- `Content-Security-Policy` (no `unsafe-inline` without a nonce/hash)
+- `Strict-Transport-Security: max-age=31536000; includeSubDomains`
+- `X-Content-Type-Options: nosniff`
+- `Referrer-Policy: strict-origin-when-cross-origin`
+- `Permissions-Policy` limited to what the app uses
+- Clickjacking: `frame-ancestors` in CSP (or `X-Frame-Options: DENY`)
+- Cookies: `HttpOnly`, `Secure`, `SameSite=Lax` or stricter
+
+## Dependencies
+- Prefer maintained, widely used packages. Pin versions via lockfile. Do not add a dependency for a few lines of code.

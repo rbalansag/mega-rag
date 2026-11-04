@@ -1,0 +1,26 @@
+{
+  "name": "mega-rag",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Universal developer & AI scaffolding engine: MDC guardrails, CLI wizard, and runtime SDK.",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "rules:sync": "node packages/cli/bin/mega-rag.js sync",
+    "rules:check": "node packages/cli/bin/mega-rag.js check --ci",
+    "change": "changeset",
+    "version-packages": "changeset version && npm install --package-lock-only",
+    "release": "npm run build && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.9",
+    "fs-extra": "^11.2.0"
+  }
+}

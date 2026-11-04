@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "rulesDir": ".cursor/rules",
+  "rules": {
+    "include": ["*"],
+    "exclude": []
+  },
+  "domains": [],
+  "envValidator": null
+}
